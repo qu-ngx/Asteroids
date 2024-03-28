@@ -1,33 +1,58 @@
 /***********************************
- * CSC 122 Sample Raylib application.
- * A game object chases the points at the front of a queue.
- *
+ * CSC 122 Sample Raylib application..
  * name: Bekam Guta and Quang Nugyen
  */
+
 #include "raylib.h"
 #include "raymath.h"
 #include <cmath>
 #include <string>
 #include <iostream>
 #include <vector>
+#include "player.hpp"
+
 using namespace std;
 
-int main(void)
+void draw_player(Player *player)
 {
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    Vector2 p1 = player->position;
+    Vector2 left = {-10, 10};
+    Vector2 right = {10, 10};
 
-    Color depauwBlack = Color{35, 31, 32, 255};
-    Color depauwGold = Color{253, 221, 6, 255};
+    left = Vector2Rotate(left, player->rotation);
+    right = Vector2Rotate(right, player->rotation);
 
-    InitWindow(screenWidth, screenHeight, "Welcome to DodFight");
+    DrawLineV(p1, Vector2Add(left, p1), RED);
+    DrawLineV(p1, Vector2Add(right, p1), RED);
+    DrawLineV(Vector2Add(left, p1), Vector2Add(right, p1), RED);
+}
 
+int main(int argc, char **argv)
+{
+    // Declare the player in the main game
+    Player player;
+    player.position.x = 400;
+    player.position.y = 300;
+    player.rotation = PI / 2.0;
+
+    // Init the window
+    InitWindow(800, 450, "Welcome to DodFight");
+
+    // Set the FPS to 60
     SetTargetFPS(60);
 
     while (!WindowShouldClose())
     {
+        Vector2 mouse_position = GetMousePosition();
+        Vector2 to_cursor = Vector2Subtract(mouse_position, player.position);
+
+        float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
 
         BeginDrawing();
+
+        // Drawing out the player
+        draw_player(&player);
+
         EndDrawing();
     }
 
