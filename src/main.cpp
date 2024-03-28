@@ -15,16 +15,21 @@ using namespace std;
 
 void draw_player(Player *player)
 {
-    Vector2 p1 = player->position;
+    Vector2 top = {0, -10};
     Vector2 left = {-10, 10};
     Vector2 right = {10, 10};
 
+    top = Vector2Rotate(top, player->rotation);
     left = Vector2Rotate(left, player->rotation);
     right = Vector2Rotate(right, player->rotation);
 
-    DrawLineV(p1, Vector2Add(left, p1), RED);
-    DrawLineV(p1, Vector2Add(right, p1), RED);
-    DrawLineV(Vector2Add(left, p1), Vector2Add(right, p1), RED);
+    Vector2 t = Vector2Add(top, player->position);
+    Vector2 l = Vector2Add(left, player->position);
+    Vector2 r = Vector2Add(right, player->position);
+
+    DrawLineV(t, l, RED);
+    DrawLineV(t, r, RED);
+    DrawLineV(l, r, RED);
 }
 
 int main(int argc, char **argv)
@@ -47,9 +52,13 @@ int main(int argc, char **argv)
         Vector2 to_cursor = Vector2Subtract(mouse_position, player.position);
 
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
+        player.rotation = angle;
 
         BeginDrawing();
 
+        DrawText(TextFormat("%.2f", angle), 0, 0, 30, RED);
+
+        ClearBackground(BLACK);
         // Drawing out the player
         draw_player(&player);
 
