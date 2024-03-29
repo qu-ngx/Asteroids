@@ -1,7 +1,7 @@
 /***********************************
- * CSC 122 Sample Raylib application..
+ * CSC 122 Raylib Major Project
  * name: Bekam Guta and Quang Nugyen
- */
+ * *********************************/
 
 #include "raylib.h"
 #include "raymath.h"
@@ -10,13 +10,17 @@
 #include <iostream>
 #include <vector>
 #include "player.hpp"
+#include "bullet.h"
 
+// Define some constants
 #define MAX_PLAYER_VELOCITY 250
+#define MAX_BULLET_COUNT 100
+#define BULLET_VELOCITY 1000.0
 
 void init_player(Player *player)
 {
     player->position.x = 400;
-    player->position.y = 400;
+    player->position.y = 300;
     player->rotation = PI / 2.0;
 
     player->acceleration = 100.0;
@@ -37,16 +41,55 @@ void draw_player(Player *player)
     Vector2 l = Vector2Add(left, player->position);
     Vector2 r = Vector2Add(right, player->position);
 
-    DrawLineV(t, l, RED);
-    DrawLineV(t, r, RED);
-    DrawLineV(l, r, RED);
+    DrawLineV(t, l, GREEN);
+    DrawLineV(t, r, GREEN);
+    DrawLineV(l, r, GREEN);
+}
+
+Bullet bullets[MAX_BULLET_COUNT];
+
+void init_bullets()
+{
+    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
+    {
+        bullets[i].dead = true;
+    }
+}
+
+Bullet *spawn_bullet()
+{
+    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
+    {
+        Bullet *bullet = (bullets + i);
+        if (!bullet->dead)
+        {
+            continue;
+        }
+        bullet->dead = false;
+        return bullet;
+    }
+    return NULL;
+}
+
+void draw_bullets()
+{
+    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
+    {
+        Bullet *bullet = (bullets + i);
+        if (bullet->dead)
+        {
+            continue;
+        }
+        DrawLineV(bullet->position, Vector2Add(bullet->position, Vector2Scale(bullet->direction, -10)), RED);
+    }
 }
 
 int main(int argc, char **argv)
 {
     // Declare the player in the main game
-    Player player;
+    Player player = {0};
     init_player(&player);
+    init_bullets();
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -55,17 +98,27 @@ int main(int argc, char **argv)
     {
         Vector2 mouse_position = GetMousePosition();
         Vector2 to_cursor = Vector2Subtract(mouse_position, player.position);
+        Vector2 player_dir = Vector2Normalize(to_cursor);
+
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+        {
+            // TODO: make sure to cursor is not zero vector
+            float a = player.acceleration * GetFrameTime();
+            player.velocity = Vector2Add(Vector2Scale(player_dir, a), player.velocity);
+        }
+
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            Bullet *bullet = spawn_bullet();
+            if (bullet)
+            {
+                bullet->position = player.position;
+                bullet->direction = player_dir;
+            }
+        }
 
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
         player.rotation = angle;
-
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-        {
-            // TO DO: make sure to cursor is not zero vector
-            float a = player.acceleration * GetFrameTime();
-            Vector2 dir = Vector2Normalize(to_cursor);
-            player.velocity = Vector2Add(Vector2Scale(dir, a), player.velocity);
-        }
 
         if (Vector2Length(player.velocity) > MAX_PLAYER_VELOCITY)
         {
@@ -74,13 +127,24 @@ int main(int argc, char **argv)
 
         player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
-        BeginDrawing();
+        for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
+        {
+            Bullet *bullet = (bullets + i);
+            Vector2 velocity = Vector2Scale(bullet->direction, BULLET_VELOCITY);
+            bullet->position = Vector2Add(bullet->position, Vector2Scale(velocity, GetFrameTime()));
 
-        DrawText(TextFormat("%.2f", angle), 0, 0, 30, RED);
+            if (bullet->position.x < -20 || bullet->position.x > GetScreenWidth() + 20 || bullet->position.y < -20 || bullet->position.y > GetScreenHeight() + 20)
+            {
+                bullet->dead = true;
+            }
+        }
+
+        BeginDrawing();
 
         ClearBackground(BLACK);
         // Drawing out the player
         draw_player(&player);
+        draw_bullets();
 
         EndDrawing();
     }
