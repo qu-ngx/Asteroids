@@ -11,11 +11,15 @@
 #include <vector>
 #include "player.hpp"
 #include "bullet.h"
+#include "asteroid.hpp"
 
 // Define some constants
 #define MAX_PLAYER_VELOCITY 250
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 1000.0
+#define MAX_ASTEROIDS_COUNT 256
+#define ASTEROIDS_BIG_WH 32
+#define ASTEROIDS_SMALL_WH 8
 
 void init_player(Player *player)
 {
@@ -80,7 +84,65 @@ void draw_bullets()
         {
             continue;
         }
-        DrawLineV(bullet->position, Vector2Add(bullet->position, Vector2Scale(bullet->direction, -10)), RED);
+        DrawLineV(bullet->position, Vector2Add(bullet->position, Vector2Scale(bullet->direction, -10)), YELLOW);
+    }
+}
+
+Asteroid asteroids[MAX_ASTEROIDS_COUNT];
+
+void init_asteroid()
+{
+    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+    {
+        Asteroid *asteroid = (asteroids + i);
+        asteroid->alive = false;
+        asteroid->is_big = false;
+        asteroid->position = Vector2Zero();
+        asteroid->velocity = Vector2Zero();
+    }
+}
+
+void spawn_asteroid(int x, int y, bool is_big)
+{
+    Asteroid *asteroid = NULL;
+    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+    {
+        Asteroid *asteroid_ = (asteroids + i);
+        if (asteroid_->alive)
+            continue;
+        asteroid = asteroid_;
+        break;
+    }
+
+    if (asteroid == NULL)
+        return;
+
+    asteroid->alive = true;
+    asteroid->position.x = GetScreenWidth() / 2;
+    asteroid->position.y = -50;
+
+    asteroid->velocity.y = 100.0f;
+    asteroid->is_big = is_big;
+}
+
+void draw_asteroids()
+{
+    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+    {
+        Asteroid *asteroid = (asteroids + i);
+        if (!asteroid->alive)
+            continue;
+
+        int asteroid_size = ASTEROIDS_SMALL_WH;
+        if (asteroid->is_big)
+        {
+            asteroid_size = ASTEROIDS_BIG_WH;
+        }
+
+        DrawRectangleLines(
+            asteroid->position.x - asteroid_size / 2,
+            asteroid->position.y - asteroid_size / 2,
+            asteroid_size, asteroid_size, RED);
     }
 }
 
@@ -90,6 +152,7 @@ int main(int argc, char **argv)
     Player player = {0};
     init_player(&player);
     init_bullets();
+    init_asteroid();
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -117,6 +180,17 @@ int main(int argc, char **argv)
             }
         }
 
+        if (IsKeyPressed(KEY_SPACE))
+        {
+            spawn_asteroid(0, 0, true);
+        }
+
+        if (IsKeyPressed(KEY_COMMA))
+        {
+            spawn_asteroid(0, 0, false);
+        }
+
+        // Player update
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
         player.rotation = angle;
 
@@ -127,9 +201,14 @@ int main(int argc, char **argv)
 
         player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
+        // Bullet update
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {
             Bullet *bullet = (bullets + i);
+
+            if (bullet->dead)
+                continue;
+
             Vector2 velocity = Vector2Scale(bullet->direction, BULLET_VELOCITY);
             bullet->position = Vector2Add(bullet->position, Vector2Scale(velocity, GetFrameTime()));
 
@@ -139,12 +218,30 @@ int main(int argc, char **argv)
             }
         }
 
+        // Asteroid update
+        for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+        {
+            Asteroid *asteroid = (asteroids + i);
+            if (!asteroid->alive)
+            {
+                continue;
+            }
+
+            asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
+
+            // if (asteroid->position.x < -20 || asteroid->position.x > GetScreenWidth() + 20 || asteroid->position.y < -20 || asteroid->position.y > GetScreenHeight() + 20)
+            // {
+            //     asteroid->alive = false;
+            // }
+        }
+
         BeginDrawing();
 
         ClearBackground(BLACK);
         // Drawing out the player
         draw_player(&player);
         draw_bullets();
+        draw_asteroids();
 
         EndDrawing();
     }
