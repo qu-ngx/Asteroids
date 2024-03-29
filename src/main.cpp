@@ -59,12 +59,13 @@ int main(int argc, char **argv)
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
         player.rotation = angle;
 
-        // TO DO: make sure to cursor is not zero vector
-        float a = player.acceleration * GetFrameTime();
-
-        Vector2 dir = Vector2Normalize(to_cursor);
-
-        player.velocity = Vector2Add(Vector2Scale(dir, a), player.velocity);
+        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            // TO DO: make sure to cursor is not zero vector
+            float a = player.acceleration * GetFrameTime();
+            Vector2 dir = Vector2Normalize(to_cursor);
+            player.velocity = Vector2Add(Vector2Scale(dir, a), player.velocity);
+        }
 
         if (Vector2Length(player.velocity) > MAX_PLAYER_VELOCITY)
         {
