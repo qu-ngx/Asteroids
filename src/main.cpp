@@ -14,7 +14,7 @@
 #include "asteroid.hpp"
 
 // Define some constants
-#define MAX_PLAYER_VELOCITY 250
+#define MAX_PLAYER_VELOCITY 150
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 1000.0
 #define MAX_ASTEROIDS_COUNT 256
@@ -125,6 +125,20 @@ void spawn_asteroid(int x, int y, bool is_big)
     asteroid->is_big = is_big;
 }
 
+Rectangle get_asteroid_bounds(Asteroid *asteroid)
+{
+    float asteroid_size = ASTEROIDS_SMALL_WH;
+    if (asteroid->is_big)
+        asteroid_size = ASTEROIDS_BIG_WH;
+
+    return (Rectangle){
+        .x = asteroid->position.x - asteroid_size / 2,
+        .y = asteroid->position.y - asteroid_size / 2,
+        .width = asteroid_size,
+        .height = asteroid_size,
+    };
+}
+
 void draw_asteroids()
 {
     for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
@@ -133,16 +147,9 @@ void draw_asteroids()
         if (!asteroid->alive)
             continue;
 
-        int asteroid_size = ASTEROIDS_SMALL_WH;
-        if (asteroid->is_big)
-        {
-            asteroid_size = ASTEROIDS_BIG_WH;
-        }
+        Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
 
-        DrawRectangleLines(
-            asteroid->position.x - asteroid_size / 2,
-            asteroid->position.y - asteroid_size / 2,
-            asteroid_size, asteroid_size, RED);
+        DrawRectangleLinesEx(asteroid_rect, 1.0, RED);
     }
 }
 
@@ -182,12 +189,12 @@ int main(int argc, char **argv)
 
         if (IsKeyPressed(KEY_SPACE))
         {
-            spawn_asteroid(0, 0, true);
+            spawn_asteroid(GetScreenWidth() / 2, -50, true);
         }
 
         if (IsKeyPressed(KEY_COMMA))
         {
-            spawn_asteroid(0, 0, false);
+            spawn_asteroid(GetScreenWidth() / 2, -50, true);
         }
 
         // Player update
@@ -205,7 +212,6 @@ int main(int argc, char **argv)
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {
             Bullet *bullet = (bullets + i);
-
             if (bullet->dead)
                 continue;
 
@@ -216,6 +222,24 @@ int main(int argc, char **argv)
             {
                 bullet->dead = true;
             }
+
+            if (bullet->dead)
+                continue;
+
+            for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
+            {
+                Asteroid *asteroid = (asteroids + i);
+                if (!asteroid->alive)
+                    continue;
+
+                Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
+                if (!CheckCollisionPointRec(bullet->position, asteroid_rect))
+                    continue;
+
+                bullet->dead = true;
+                asteroid->alive = false;
+                break;
+            }
         }
 
         // Asteroid update
@@ -223,9 +247,7 @@ int main(int argc, char **argv)
         {
             Asteroid *asteroid = (asteroids + i);
             if (!asteroid->alive)
-            {
                 continue;
-            }
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
