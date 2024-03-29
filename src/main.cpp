@@ -11,7 +11,17 @@
 #include <vector>
 #include "player.hpp"
 
-using namespace std;
+#define MAX_PLAYER_VELOCITY 100
+
+void init_player(Player *player)
+{
+    player->position.x = 400;
+    player->position.y = 400;
+    player->rotation = PI / 2.0;
+
+    player->acceleration = 100.0;
+    player->velocity = Vector2Zero();
+}
 
 void draw_player(Player *player)
 {
@@ -36,15 +46,10 @@ int main(int argc, char **argv)
 {
     // Declare the player in the main game
     Player player;
-    player.position.x = 400;
-    player.position.y = 300;
-    player.rotation = PI / 2.0;
+    init_player(&player);
 
     // Init the window
-    InitWindow(800, 450, "Welcome to DodFight");
-
-    // Set the FPS to 60
-    SetTargetFPS(60);
+    InitWindow(800, 600, "Welcome to DodFight");
 
     while (!WindowShouldClose())
     {
@@ -53,6 +58,20 @@ int main(int argc, char **argv)
 
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
         player.rotation = angle;
+
+        // TO DO: make sure to cursor is not zero vector
+        float a = player.acceleration * GetFrameTime();
+
+        Vector2 dir = Vector2Normalize(to_cursor);
+
+        player.velocity = Vector2Add(Vector2Scale(dir, a), player.velocity);
+
+        if (Vector2Length(player.velocity) > MAX_PLAYER_VELOCITY)
+        {
+            player.velocity = Vector2Scale(Vector2Normalize(player.velocity), MAX_PLAYER_VELOCITY);
+        }
+
+        player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
         BeginDrawing();
 

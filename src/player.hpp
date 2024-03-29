@@ -8,6 +8,8 @@ private:
 public:
     Vector2 position;
     float rotation;
+    float acceleration;
+    Vector2 velocity;
 };
 
 #endif
