@@ -102,7 +102,7 @@ void init_asteroid()
     }
 }
 
-void spawn_asteroid(int x, int y, bool is_big)
+Asteroid *spawn_asteroid(int x, int y, bool is_big)
 {
     Asteroid *asteroid = NULL;
     for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
@@ -115,14 +115,15 @@ void spawn_asteroid(int x, int y, bool is_big)
     }
 
     if (asteroid == NULL)
-        return;
+        return NULL;
 
     asteroid->alive = true;
-    asteroid->position.x = GetScreenWidth() / 2;
-    asteroid->position.y = -50;
+    asteroid->position.x = x;
+    asteroid->position.y = y;
 
     asteroid->velocity.y = 100.0f;
     asteroid->is_big = is_big;
+    return asteroid;
 }
 
 Rectangle get_asteroid_bounds(Asteroid *asteroid)
@@ -238,6 +239,23 @@ int main(int argc, char **argv)
 
                 bullet->dead = true;
                 asteroid->alive = false;
+
+                if (asteroid->is_big)
+                {
+                    float velocity_magnitude = Vector2Length(asteroid->velocity);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Asteroid *child_asteroid = spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
+                        if (child_asteroid == NULL)
+                            break;
+
+                        Vector2 velocity = {0, -1};
+                        velocity = Vector2Rotate(velocity, (GetRandomValue(0, 100) / 100.0f) * PI * 2.0);
+                        velocity = Vector2Scale(velocity, velocity_magnitude);
+                        child_asteroid->velocity = velocity;
+                    }
+                }
+
                 break;
             }
         }
