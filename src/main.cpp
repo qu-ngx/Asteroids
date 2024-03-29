@@ -1,6 +1,6 @@
 /***********************************
  * CSC 122 Raylib Major Project
- * name: Bekam Guta and Quang Nugyen
+ * name: Bekam Guta and Quang Nguyen
  * *********************************/
 
 #include "raylib.h"
@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 #include "player.hpp"
-#include "bullet.h"
+#include "bullet.hpp"
 #include "asteroid.hpp"
 
 // Define some constants

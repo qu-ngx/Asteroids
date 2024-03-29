@@ -10,7 +10,7 @@
 #include <iostream>
 #include <vector>
 #include "player.hpp"
-#include "bullet.h"
+#include "bullet.hpp"
 #include "asteroid.hpp"
 
 // Define some constants
