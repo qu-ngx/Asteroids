@@ -1,25 +1,27 @@
 /***********************************
  * CSC 122 Raylib Major Project
- * name: Bekam Guta and Quang Nugyen
+ * name: Bekam Guta and Quang Nguyen
  * *********************************/
 
 #include "raylib.h"
 #include "raymath.h"
 #include <cmath>
+#include <math.h>
 #include <string>
 #include <iostream>
 #include <vector>
 #include "player.hpp"
 #include "bullet.hpp"
-#include "asteroid.hpp"
+#include "AsteroidList.hpp"
+#include "Asteroid_.hpp"
 
 // Define some constants
-#define MAX_PLAYER_VELOCITY 250
+#define MAX_PLAYER_VELOCITY 150
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 1000.0
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
-#define ASTEROIDS_SMALL_WH 8
+#define ASTEROIDS_SMALL_WH 16
 
 void init_player(Player *player)
 {
@@ -88,71 +90,21 @@ void draw_bullets()
     }
 }
 
-Asteroid asteroids[MAX_ASTEROIDS_COUNT];
-
-void init_asteroid()
-{
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid = (asteroids + i);
-        asteroid->alive = false;
-        asteroid->is_big = false;
-        asteroid->position = Vector2Zero();
-        asteroid->velocity = Vector2Zero();
-    }
-}
-
-void spawn_asteroid(int x, int y, bool is_big)
-{
-    Asteroid *asteroid = NULL;
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid_ = (asteroids + i);
-        if (asteroid_->alive)
-            continue;
-        asteroid = asteroid_;
-        break;
-    }
-
-    if (asteroid == NULL)
-        return;
-
-    asteroid->alive = true;
-    asteroid->position.x = GetScreenWidth() / 2;
-    asteroid->position.y = -50;
-
-    asteroid->velocity.y = 100.0f;
-    asteroid->is_big = is_big;
-}
-
-void draw_asteroids()
-{
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid = (asteroids + i);
-        if (!asteroid->alive)
-            continue;
-
-        int asteroid_size = ASTEROIDS_SMALL_WH;
-        if (asteroid->is_big)
-        {
-            asteroid_size = ASTEROIDS_BIG_WH;
-        }
-
-        DrawRectangleLines(
-            asteroid->position.x - asteroid_size / 2,
-            asteroid->position.y - asteroid_size / 2,
-            asteroid_size, asteroid_size, RED);
-    }
-}
-
 int main(int argc, char **argv)
 {
     // Declare the player in the main game
     Player player = {0};
     init_player(&player);
     init_bullets();
-    init_asteroid();
+
+    // Initialize asteroids
+    AsteroidList asteroidslist;
+
+    for (int i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+    {
+        Asteroid_ asteroid;
+        asteroidslist.append(asteroid);
+    }
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -182,12 +134,7 @@ int main(int argc, char **argv)
 
         if (IsKeyPressed(KEY_SPACE))
         {
-            spawn_asteroid(0, 0, true);
-        }
-
-        if (IsKeyPressed(KEY_COMMA))
-        {
-            spawn_asteroid(0, 0, false);
+            asteroidslist.spawnAll();
         }
 
         // Player update
@@ -205,7 +152,6 @@ int main(int argc, char **argv)
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {
             Bullet *bullet = (bullets + i);
-
             if (bullet->dead)
                 continue;
 
@@ -216,16 +162,50 @@ int main(int argc, char **argv)
             {
                 bullet->dead = true;
             }
+
+            if (bullet->dead)
+                continue;
+
+            for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
+            {
+                Asteroid_ *asteroid = (asteroidslist.asteroids + j);
+                if (!asteroid->alive)
+                    continue;
+
+                Rectangle asteroid_rect = asteroidslist.get_asteroid_bounds(asteroid);
+                if (!CheckCollisionPointRec(bullet->position, asteroid_rect))
+                    continue;
+
+                bullet->dead = true;
+                asteroid->alive = false;
+
+                if (asteroid->is_big)
+                {
+                    float velocity_magnitude = Vector2Length(asteroid->velocity);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Asteroid_ *child_asteroid = asteroidslist.spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
+                        if (child_asteroid == NULL)
+                            break;
+
+                        Vector2 velocity = {0, -1};
+                        velocity = Vector2Rotate(velocity, (GetRandomValue(0, 100) / 100.0f) * PI * 2.0);
+                        velocity = Vector2Scale(velocity, velocity_magnitude);
+                        child_asteroid->velocity = velocity;
+                    }
+                }
+
+                break;
+            }
         }
 
         // Asteroid update
+
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
-            Asteroid *asteroid = (asteroids + i);
+            Asteroid_ *asteroid = (asteroidslist.asteroids + i);
             if (!asteroid->alive)
-            {
                 continue;
-            }
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
@@ -241,7 +221,7 @@ int main(int argc, char **argv)
         // Drawing out the player
         draw_player(&player);
         draw_bullets();
-        draw_asteroids();
+        asteroidslist.draw_asteroids();
 
         EndDrawing();
     }
