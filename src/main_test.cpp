@@ -10,7 +10,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "player.hpp"
+#include "Player/Player.hpp"
 #include "bullet.hpp"
 
 #include "Asteroid/AsteroidList.hpp"
@@ -181,6 +181,8 @@ int main(int argc, char **argv)
                 bullet->dead = true;
                 asteroid->alive = false;
 
+                score++;
+
                 if (asteroid->is_big)
                 {
                     float velocity_magnitude = Vector2Length(asteroid->velocity);
@@ -222,10 +224,12 @@ int main(int argc, char **argv)
         BeginDrawing();
 
         ClearBackground(BLACK);
-        // Drawing out the player
+        // Drawing out the player, bullets, asteroids
         draw_player(&player);
         draw_bullets();
         asteroidslist.draw_asteroids();
+
+        DrawText(TextFormat("Score: %d", score), 0, 0, 64, RED);
 
         EndDrawing();
     }

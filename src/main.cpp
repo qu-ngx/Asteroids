@@ -10,8 +10,10 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "player.hpp"
+#include "Player/Player.hpp"
 #include "bullet.hpp"
+
+#include "Asteroid/AsteroidList.hpp"
 #include "Asteroid/Asteroid.hpp"
 
 // Define some constants
@@ -86,79 +88,22 @@ void draw_bullets()
     }
 }
 
-Asteroid asteroids[MAX_ASTEROIDS_COUNT];
-
-void init_asteroid()
-{
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid = (asteroids + i);
-        asteroid->alive = false;
-        asteroid->is_big = false;
-        asteroid->position = Vector2Zero();
-        asteroid->velocity = Vector2Zero();
-    }
-}
-
-Asteroid *spawn_asteroid(int x, int y, bool is_big)
-{
-    Asteroid *asteroid = NULL;
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid_ = (asteroids + i);
-        if (asteroid_->alive)
-            continue;
-        asteroid = asteroid_;
-        break;
-    }
-
-    if (asteroid == NULL)
-        return NULL;
-
-    asteroid->alive = true;
-    asteroid->position.x = x;
-    asteroid->position.y = y;
-    asteroid->is_big = is_big;
-    return asteroid;
-}
-
-Rectangle get_asteroid_bounds(Asteroid *asteroid)
-{
-    float asteroid_size = ASTEROIDS_SMALL_WH;
-    if (asteroid->is_big)
-        asteroid_size = ASTEROIDS_BIG_WH;
-
-    return (Rectangle){
-        .x = asteroid->position.x - asteroid_size / 2,
-        .y = asteroid->position.y - asteroid_size / 2,
-        .width = asteroid_size,
-        .height = asteroid_size,
-    };
-}
-
-void draw_asteroids()
-{
-    for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-    {
-        Asteroid *asteroid = (asteroids + i);
-        if (!asteroid->alive)
-            continue;
-
-        Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
-
-        DrawRectangleLinesEx(asteroid_rect, 1.0, RED);
-    }
-}
-
 int main(int argc, char **argv)
 {
     // Declare the player in the main game
     Player player = {0};
     init_player(&player);
     init_bullets();
-    init_asteroid();
     int score = 0;
     float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
+
+    // Initialize asteroids
+    AsteroidList asteroidslist;
+    for (int i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+    {
+        Asteroid asteroid;
+        asteroidslist.append(asteroid);
+    }
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -168,6 +113,7 @@ int main(int argc, char **argv)
         Vector2 mouse_position = GetMousePosition();
         Vector2 to_cursor = Vector2Subtract(mouse_position, player.position);
         Vector2 player_dir = Vector2Normalize(to_cursor);
+        bool gameover = false;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
@@ -190,23 +136,7 @@ int main(int argc, char **argv)
         if (asteroid_spawn_sec < 0)
         {
             asteroid_spawn_sec = ASTEROID_SPAWN_SEC + asteroid_spawn_sec;
-            bool is_big = GetRandomValue(0, 1);
-
-            Vector2 random_direction = Vector2Rotate((Vector2){0, -1}, PI * 2 * GetRandomValue(0, 100) / 100.0);
-            Vector2 signs = {static_cast<float>(random_direction.x >= 0 ? 1 : -1), static_cast<float>(random_direction.y >= 0 ? 1 : -1)};
-            Vector2 relative = (Vector2){
-                (GetScreenWidth() / 2 + 50) * -signs.x,
-                (GetScreenHeight() / 2 + 50) * -signs.y};
-
-            Vector2 screen_middle = {static_cast<float>(GetScreenWidth() / 2.0f), static_cast<float>(GetScreenHeight() / 2.0f)};
-            Vector2 spawn_postion = Vector2Add(screen_middle, relative);
-
-            Asteroid *asteroid = spawn_asteroid(spawn_postion.x, spawn_postion.y, is_big);
-
-            if (asteroid != NULL)
-            {
-                asteroid->velocity = Vector2Scale(random_direction, 100.0f);
-            }
+            asteroidslist.spawnAll();
         }
 
         // Player update
@@ -240,11 +170,11 @@ int main(int argc, char **argv)
 
             for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
             {
-                Asteroid *asteroid = (asteroids + j);
+                Asteroid *asteroid = (asteroidslist.asteroids + j);
                 if (!asteroid->alive)
                     continue;
 
-                Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
+                Rectangle asteroid_rect = asteroidslist.get_asteroid_bounds(asteroid);
                 if (!CheckCollisionPointRec(bullet->position, asteroid_rect))
                     continue;
 
@@ -258,7 +188,7 @@ int main(int argc, char **argv)
                     float velocity_magnitude = Vector2Length(asteroid->velocity);
                     for (int i = 0; i < 4; i++)
                     {
-                        Asteroid *child_asteroid = spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
+                        Asteroid *child_asteroid = asteroidslist.spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
                         if (child_asteroid == NULL)
                             break;
 
@@ -273,18 +203,16 @@ int main(int argc, char **argv)
             }
         }
 
-        bool gameover = false;
-
         // Asteroid update
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
-            Asteroid *asteroid = (asteroids + i);
+            Asteroid *asteroid = (asteroidslist.asteroids + i);
             if (!asteroid->alive)
                 continue;
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
-            Rectangle asteroid_bounds = get_asteroid_bounds(asteroid);
+            Rectangle asteroid_bounds = asteroidslist.get_asteroid_bounds(asteroid);
 
             if (CheckCollisionCircleRec(player.position, 5.0f, asteroid_bounds))
                 gameover = true;
@@ -296,11 +224,10 @@ int main(int argc, char **argv)
         BeginDrawing();
 
         ClearBackground(BLACK);
-
-        // Drawing out the player
+        // Drawing out the player, bullets, asteroids
         draw_player(&player);
         draw_bullets();
-        draw_asteroids();
+        asteroidslist.draw_asteroids();
 
         DrawText(TextFormat("Score: %d", score), 0, 0, 64, RED);
 

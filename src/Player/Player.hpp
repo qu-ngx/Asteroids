@@ -11,7 +11,6 @@ public:
     float acceleration;
     Vector2 velocity;
 
-    // Testing feature (Refactor)
     // void init_player()
     // {
     //     Player player;
