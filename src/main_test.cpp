@@ -13,7 +13,7 @@
 #include "player.hpp"
 #include "bullet.hpp"
 #include "AsteroidList.hpp"
-#include "Asteroid_.hpp"
+#include "Asteroid.hpp"
 
 // Define some constants
 #define MAX_PLAYER_VELOCITY 150
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < MAX_ASTEROIDS_COUNT; i++)
     {
-        Asteroid_ asteroid;
+        Asteroid asteroid;
         asteroidslist.append(asteroid);
     }
 
@@ -168,7 +168,7 @@ int main(int argc, char **argv)
 
             for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
             {
-                Asteroid_ *asteroid = (asteroidslist.asteroids + j);
+                Asteroid *asteroid = (asteroidslist.asteroids + j);
                 if (!asteroid->alive)
                     continue;
 
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
                     float velocity_magnitude = Vector2Length(asteroid->velocity);
                     for (int i = 0; i < 4; i++)
                     {
-                        Asteroid_ *child_asteroid = asteroidslist.spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
+                        Asteroid *child_asteroid = asteroidslist.spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
                         if (child_asteroid == NULL)
                             break;
 
@@ -203,7 +203,7 @@ int main(int argc, char **argv)
 
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
-            Asteroid_ *asteroid = (asteroidslist.asteroids + i);
+            Asteroid *asteroid = (asteroidslist.asteroids + i);
             if (!asteroid->alive)
                 continue;
 

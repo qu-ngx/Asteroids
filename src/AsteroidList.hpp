@@ -4,7 +4,7 @@
 #include <iostream>
 #include "raylib.h"
 #include "raymath.h"
-#include "Asteroid_.hpp"
+#include "Asteroid.hpp"
 
 class AsteroidList
 {
@@ -15,7 +15,7 @@ private:
     void increaseCapacity()
     {
         int new_capacity = 2 * capacity;
-        Asteroid_ *new_array = new Asteroid_[new_capacity]();
+        Asteroid *new_array = new Asteroid[new_capacity]();
         for (int i = 0; i < size; ++i)
         {
             new_array[i] = asteroids[i];
@@ -26,12 +26,12 @@ private:
     }
 
 public:
-    Asteroid_ *asteroids;
+    Asteroid *asteroids;
 
     AsteroidList()
     {
         capacity = 256; // Initial capacity
-        asteroids = new Asteroid_[capacity]();
+        asteroids = new Asteroid[capacity]();
         size = 0;
     }
 
@@ -40,7 +40,7 @@ public:
         delete[] asteroids;
     }
 
-    void insert(Asteroid_ value, int index)
+    void insert(Asteroid value, int index)
     {
         size++;
         if (size == capacity)
@@ -54,7 +54,7 @@ public:
         asteroids[index] = value;
     }
 
-    void append(Asteroid_ value)
+    void append(Asteroid value)
     {
         if (size == capacity)
         {
@@ -66,17 +66,17 @@ public:
 
     float getX(int j)
     {
-        Asteroid_ *asteroid = (asteroids + j);
+        Asteroid *asteroid = (asteroids + j);
         return asteroid->position.x;
     }
 
     float getY(int j)
     {
-        Asteroid_ *asteroid = (asteroids + j);
+        Asteroid *asteroid = (asteroids + j);
         return asteroid->position.y;
     }
 
-    Rectangle get_asteroid_bounds(Asteroid_ *asteroid)
+    Rectangle get_asteroid_bounds(Asteroid *asteroid)
     {
         float asteroid_size = ASTEROIDS_SMALL_WH;
         if (asteroid->is_big)
@@ -94,7 +94,7 @@ public:
     {
         for (size_t i = 0; i < capacity; i++)
         {
-            Asteroid_ *asteroid = (asteroids + i);
+            Asteroid *asteroid = (asteroids + i);
             if (asteroid)
             {
                 if (!asteroid->alive)
@@ -107,12 +107,12 @@ public:
         }
     }
 
-    Asteroid_ *spawn_asteroid(int x, int y, bool is_big)
+    Asteroid *spawn_asteroid(int x, int y, bool is_big)
     {
-        Asteroid_ *asteroid = NULL;
+        Asteroid *asteroid = NULL;
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
-            Asteroid_ *asteroid_ = (asteroids + i);
+            Asteroid *asteroid_ = (asteroids + i);
             if (asteroid_->alive)
                 continue;
             asteroid = asteroid_;
@@ -131,7 +131,7 @@ public:
 
     void changeVelo(int j, Vector2 random_direction)
     {
-        Asteroid_ *asteroid = (asteroids + j);
+        Asteroid *asteroid = (asteroids + j);
         asteroid->alive = false;
         if (&asteroid != NULL)
         {
@@ -152,7 +152,7 @@ public:
         Vector2 screen_middle = {static_cast<float>(GetScreenWidth() / 2.0f), static_cast<float>(GetScreenHeight() / 2.0f)};
         Vector2 spawn_postion = Vector2Add(screen_middle, relative);
 
-        Asteroid_ *asteroid = spawn_asteroid(spawn_postion.x, spawn_postion.y, is_big);
+        Asteroid *asteroid = spawn_asteroid(spawn_postion.x, spawn_postion.y, is_big);
 
         if (asteroid != NULL)
         {

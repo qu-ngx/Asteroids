@@ -2,15 +2,25 @@
 #define ASTEROID_HPP
 
 #include "raymath.h"
+#define MAX_ASTEROIDS_COUNT 256
+#define ASTEROIDS_BIG_WH 32
+#define ASTEROIDS_SMALL_WH 16
 
 class Asteroid
 {
-
 public:
-    Vector2 position;
     Vector2 velocity;
-    bool is_big;
+    Vector2 position;
     bool alive;
+    bool is_big;
+
+    Asteroid()
+    {
+        alive = false;
+        is_big = false;
+        position = Vector2Zero();
+        velocity = Vector2Zero();
+    }
 };
 
 #endif
