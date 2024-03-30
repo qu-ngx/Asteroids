@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <cmath>
+#include <math.h>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -19,7 +20,7 @@
 #define BULLET_VELOCITY 1000.0
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
-#define ASTEROIDS_SMALL_WH 8
+#define ASTEROIDS_SMALL_WH 16
 
 void init_player(Player *player)
 {
@@ -120,8 +121,6 @@ Asteroid *spawn_asteroid(int x, int y, bool is_big)
     asteroid->alive = true;
     asteroid->position.x = x;
     asteroid->position.y = y;
-
-    asteroid->velocity.y = 100.0f;
     asteroid->is_big = is_big;
     return asteroid;
 }
@@ -190,7 +189,23 @@ int main(int argc, char **argv)
 
         if (IsKeyPressed(KEY_SPACE))
         {
-            spawn_asteroid(GetScreenWidth() / 2, -50, true);
+            bool is_big = GetRandomValue(0, 1);
+
+            Vector2 random_direction = Vector2Rotate((Vector2){0, -1}, PI * 2 * GetRandomValue(0, 100) / 100.0);
+            Vector2 signs = {static_cast<float>(random_direction.x >= 0 ? 1 : -1), static_cast<float>(random_direction.y >= 0 ? 1 : -1)};
+            Vector2 relative = (Vector2){
+                (GetScreenWidth() / 2 + 50) * -signs.x,
+                (GetScreenHeight() / 2 + 50) * -signs.y};
+
+            Vector2 screen_middle = {static_cast<float>(GetScreenWidth() / 2.0f), static_cast<float>(GetScreenHeight() / 2.0f)};
+            Vector2 spawn_postion = Vector2Add(screen_middle, relative);
+
+            Asteroid *asteroid = spawn_asteroid(spawn_postion.x, spawn_postion.y, is_big);
+
+            if (asteroid != NULL)
+            {
+                asteroid->velocity = Vector2Scale(random_direction, 100.0f);
+            }
         }
 
         if (IsKeyPressed(KEY_COMMA))
@@ -229,7 +244,7 @@ int main(int argc, char **argv)
 
             for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
             {
-                Asteroid *asteroid = (asteroids + i);
+                Asteroid *asteroid = (asteroids + j);
                 if (!asteroid->alive)
                     continue;
 
