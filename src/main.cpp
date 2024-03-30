@@ -18,10 +18,6 @@
 #define MAX_PLAYER_VELOCITY 150
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 1000.0
-#define MAX_ASTEROIDS_COUNT 256
-#define ASTEROIDS_BIG_WH 32
-#define ASTEROIDS_SMALL_WH 16
-#define ASTEROID_SPAWN_SEC 0.5f
 
 void init_player(Player *player)
 {
@@ -162,7 +158,7 @@ int main(int argc, char **argv)
     init_bullets();
     init_asteroid();
     int score = 0;
-    int asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
+    float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -190,8 +186,10 @@ int main(int argc, char **argv)
             }
         }
 
-        if (IsKeyPressed(KEY_SPACE))
+        asteroid_spawn_sec -= GetFrameTime();
+        if (asteroid_spawn_sec < 0)
         {
+            asteroid_spawn_sec = ASTEROID_SPAWN_SEC + asteroid_spawn_sec;
             bool is_big = GetRandomValue(0, 1);
 
             Vector2 random_direction = Vector2Rotate((Vector2){0, -1}, PI * 2 * GetRandomValue(0, 100) / 100.0);
@@ -258,6 +256,8 @@ int main(int argc, char **argv)
                 bullet->dead = true;
                 asteroid->alive = false;
 
+                score++;
+
                 if (asteroid->is_big)
                 {
                     float velocity_magnitude = Vector2Length(asteroid->velocity);
@@ -305,6 +305,8 @@ int main(int argc, char **argv)
         draw_player(&player);
         draw_bullets();
         draw_asteroids();
+
+        DrawText(TextFormat("Score: %d", score), 0, 0, 64, RED);
 
         EndDrawing();
     }
