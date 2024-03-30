@@ -13,8 +13,8 @@
 #include "player.hpp"
 #include "bullet.hpp"
 
-#include "AsteroidList.hpp"
-#include "Asteroid.hpp"
+#include "Asteroid/AsteroidList.hpp"
+#include "Asteroid/Asteroid.hpp"
 
 // Define some constants
 #define MAX_PLAYER_VELOCITY 150
