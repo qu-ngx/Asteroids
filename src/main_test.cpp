@@ -12,6 +12,7 @@
 #include <vector>
 #include "player.hpp"
 #include "bullet.hpp"
+
 #include "AsteroidList.hpp"
 #include "Asteroid.hpp"
 
@@ -209,10 +210,7 @@ int main(int argc, char **argv)
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
-            // if (asteroid->position.x < -20 || asteroid->position.x > GetScreenWidth() + 20 || asteroid->position.y < -20 || asteroid->position.y > GetScreenHeight() + 20)
-            // {
-            //     asteroid->alive = false;
-            // }
+            Rectangle asteroid_bounds = asteroidslist.get_asteroid_bounds(asteroid);
         }
 
         BeginDrawing();

@@ -12,7 +12,7 @@
 #include <vector>
 #include "player.hpp"
 #include "bullet.hpp"
-#include "asteroid.hpp"
+#include "Asteroid.hpp"
 
 // Define some constants
 #define MAX_PLAYER_VELOCITY 150
@@ -21,6 +21,7 @@
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16
+#define ASTEROID_SPAWN_SEC 0.5f
 
 void init_player(Player *player)
 {
@@ -160,6 +161,8 @@ int main(int argc, char **argv)
     init_player(&player);
     init_bullets();
     init_asteroid();
+    int score = 0;
+    int asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
 
     // Init the window
     InitWindow(800, 600, "Welcome to DodFight");
@@ -275,6 +278,8 @@ int main(int argc, char **argv)
             }
         }
 
+        bool gameover = false;
+
         // Asteroid update
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
@@ -284,15 +289,18 @@ int main(int argc, char **argv)
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
-            // if (asteroid->position.x < -20 || asteroid->position.x > GetScreenWidth() + 20 || asteroid->position.y < -20 || asteroid->position.y > GetScreenHeight() + 20)
-            // {
-            //     asteroid->alive = false;
-            // }
+            Rectangle asteroid_bounds = get_asteroid_bounds(asteroid);
+
+            if (CheckCollisionCircleRec(player.position, 5.0f, asteroid_bounds))
+                gameover = true;
         }
+        if (gameover)
+            break;
 
         BeginDrawing();
 
         ClearBackground(BLACK);
+
         // Drawing out the player
         draw_player(&player);
         draw_bullets();

@@ -64,18 +64,6 @@ public:
         size++;
     }
 
-    float getX(int j)
-    {
-        Asteroid *asteroid = (asteroids + j);
-        return asteroid->position.x;
-    }
-
-    float getY(int j)
-    {
-        Asteroid *asteroid = (asteroids + j);
-        return asteroid->position.y;
-    }
-
     Rectangle get_asteroid_bounds(Asteroid *asteroid)
     {
         float asteroid_size = ASTEROIDS_SMALL_WH;
@@ -127,16 +115,6 @@ public:
         asteroid->position.y = y;
         asteroid->is_big = is_big;
         return asteroid;
-    }
-
-    void changeVelo(int j, Vector2 random_direction)
-    {
-        Asteroid *asteroid = (asteroids + j);
-        asteroid->alive = false;
-        if (&asteroid != NULL)
-        {
-            asteroid->velocity = Vector2Scale(random_direction, 100.0f);
-        }
     }
 
     void spawnAll()
