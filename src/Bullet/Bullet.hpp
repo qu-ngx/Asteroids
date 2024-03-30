@@ -2,6 +2,10 @@
 #define BULLET_HPP
 
 #include "lib/raymath.h"
+// Define some constants
+#define MAX_BULLET_COUNT 100
+#define BULLET_VELOCITY 1000.0
+
 class Bullet
 {
 public:

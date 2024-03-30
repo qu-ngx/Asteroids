@@ -65,21 +65,6 @@ public:
         stackSize--;   // Update stackSize
         return *stack; // Return the popped card
     }
-
-    bool isEmpty() const
-    {
-        return stackSize == 0;
-    }
-
-    bool isFull() const
-    {
-        return stackSize == capacity;
-    }
-
-    int size() const
-    {
-        return stackSize;
-    }
 };
 
 #endif

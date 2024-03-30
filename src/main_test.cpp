@@ -5,50 +5,10 @@
 
 #include "lib/raylib.h"
 #include "lib/raymath.h"
-#include <cmath>
-#include <math.h>
-#include <string>
-#include <iostream>
-#include <vector>
 #include "Player/Player.hpp"
-#include "bullet.hpp"
-
+#include "Bullet/Bullet.hpp"
 #include "Asteroid/AsteroidList.hpp"
 #include "Asteroid/Asteroid.hpp"
-
-// Define some constants
-#define MAX_PLAYER_VELOCITY 150
-#define MAX_BULLET_COUNT 100
-#define BULLET_VELOCITY 1000.0
-
-void init_player(Player *player)
-{
-    player->position.x = 400;
-    player->position.y = 300;
-    player->rotation = PI / 2.0;
-
-    player->acceleration = 100.0;
-    player->velocity = Vector2Zero();
-}
-
-void draw_player(Player *player)
-{
-    Vector2 top = {0, -10};
-    Vector2 left = {-10, 10};
-    Vector2 right = {10, 10};
-
-    top = Vector2Rotate(top, player->rotation);
-    left = Vector2Rotate(left, player->rotation);
-    right = Vector2Rotate(right, player->rotation);
-
-    Vector2 t = Vector2Add(top, player->position);
-    Vector2 l = Vector2Add(left, player->position);
-    Vector2 r = Vector2Add(right, player->position);
-
-    DrawLineV(t, l, GREEN);
-    DrawLineV(t, r, GREEN);
-    DrawLineV(l, r, GREEN);
-}
 
 Bullet bullets[MAX_BULLET_COUNT];
 
@@ -91,8 +51,7 @@ void draw_bullets()
 int main(int argc, char **argv)
 {
     // Declare the player in the main game
-    Player player = {0};
-    init_player(&player);
+    Player player;
     init_bullets();
     int score = 0;
     float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
@@ -225,7 +184,7 @@ int main(int argc, char **argv)
 
         ClearBackground(BLACK);
         // Drawing out the player, bullets, asteroids
-        draw_player(&player);
+        player.draw_player();
         draw_bullets();
         asteroidslist.draw_asteroids();
 
