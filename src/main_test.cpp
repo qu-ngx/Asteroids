@@ -20,9 +20,6 @@
 #define MAX_PLAYER_VELOCITY 150
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 1000.0
-#define MAX_ASTEROIDS_COUNT 256
-#define ASTEROIDS_BIG_WH 32
-#define ASTEROIDS_SMALL_WH 16
 
 void init_player(Player *player)
 {
@@ -97,10 +94,11 @@ int main(int argc, char **argv)
     Player player = {0};
     init_player(&player);
     init_bullets();
+    int score = 0;
+    float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
 
     // Initialize asteroids
     AsteroidList asteroidslist;
-
     for (int i = 0; i < MAX_ASTEROIDS_COUNT; i++)
     {
         Asteroid asteroid;
@@ -115,6 +113,7 @@ int main(int argc, char **argv)
         Vector2 mouse_position = GetMousePosition();
         Vector2 to_cursor = Vector2Subtract(mouse_position, player.position);
         Vector2 player_dir = Vector2Normalize(to_cursor);
+        bool gameover = false;
 
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         {
@@ -133,8 +132,10 @@ int main(int argc, char **argv)
             }
         }
 
-        if (IsKeyPressed(KEY_SPACE))
+        asteroid_spawn_sec -= GetFrameTime();
+        if (asteroid_spawn_sec < 0)
         {
+            asteroid_spawn_sec = ASTEROID_SPAWN_SEC + asteroid_spawn_sec;
             asteroidslist.spawnAll();
         }
 
@@ -201,7 +202,6 @@ int main(int argc, char **argv)
         }
 
         // Asteroid update
-
         for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
         {
             Asteroid *asteroid = (asteroidslist.asteroids + i);
@@ -211,7 +211,13 @@ int main(int argc, char **argv)
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
             Rectangle asteroid_bounds = asteroidslist.get_asteroid_bounds(asteroid);
+
+            if (CheckCollisionCircleRec(player.position, 5.0f, asteroid_bounds))
+                gameover = true;
         }
+
+        if (gameover)
+            break;
 
         BeginDrawing();
 

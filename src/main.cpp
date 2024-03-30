@@ -209,11 +209,6 @@ int main(int argc, char **argv)
             }
         }
 
-        if (IsKeyPressed(KEY_COMMA))
-        {
-            spawn_asteroid(GetScreenWidth() / 2, -50, true);
-        }
-
         // Player update
         float angle = Vector2Angle((Vector2){0, -1}, to_cursor);
         player.rotation = angle;
@@ -294,6 +289,7 @@ int main(int argc, char **argv)
             if (CheckCollisionCircleRec(player.position, 5.0f, asteroid_bounds))
                 gameover = true;
         }
+
         if (gameover)
             break;
 
