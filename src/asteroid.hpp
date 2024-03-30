@@ -1,7 +1,7 @@
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
 
-#include "raymath.h"
+#include "lib/raymath.h"
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16

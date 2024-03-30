@@ -1,7 +1,7 @@
 #ifndef BULLET_HPP
 #define BULLET_HPP
 
-#include "raymath.h"
+#include "lib/raymath.h"
 class Bullet
 {
 public:

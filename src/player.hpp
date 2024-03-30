@@ -1,7 +1,7 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include "raymath.h"
+#include "lib/raymath.h"
 class Player
 {
 private:

@@ -3,8 +3,8 @@
  * name: Bekam Guta and Quang Nguyen
  * *********************************/
 
-#include "raylib.h"
-#include "raymath.h"
+#include "lib/raylib.h"
+#include "lib/raymath.h"
 #include <cmath>
 #include <math.h>
 #include <string>

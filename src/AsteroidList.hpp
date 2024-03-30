@@ -2,8 +2,8 @@
 #define ARRAYLIST_H
 
 #include <iostream>
-#include "raylib.h"
-#include "raymath.h"
+#include "lib/raylib.h"
+#include "lib/raymath.h"
 #include "Asteroid.hpp"
 
 #define MAX_ASTEROIDS_COUNT 256
