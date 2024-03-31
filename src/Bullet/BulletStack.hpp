@@ -7,7 +7,7 @@
 #include "lib/raylib.h"
 
 #define MAX_BULLET_COUNT 100
-#define BULLET_VELOCITY 10.0
+#define BULLET_VELOCITY 20.0
 using namespace std;
 
 class BulletStack
@@ -44,22 +44,21 @@ public:
         delete[] bullets;
     }
 
-    void push(const Bullet &card)
+    void push(const Bullet &bullet)
     {
         if (stackSize == capacity)
         {
             increaseCapacity();
         }
-        bullets[topIndex++] = card;
+        bullets[topIndex++] = bullet;
         stackSize++;
     }
 
-    void pop()
+    Bullet pop()
     {
-        Bullet *bullet = bullets;
         if (stackSize == 0)
         {
-            return; // This will return a default-constructed card
+            return Bullet(); // This will return a default-constructed card
         }
 
         // It will shift elements to the left
@@ -67,6 +66,8 @@ public:
         {
             bullets[i] = bullets[i + 1];
         }
+        stackSize--;
+        return *bullets;
     }
 
     Bullet *spawn_bullet()
