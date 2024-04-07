@@ -15,7 +15,7 @@ Stack - Bullet (speed of bullet = O(1) * BulletSpeed)
 - to access a Bullet in Stack, we have to pop to access later Bullets (O(1)) making the runtime faster, so we need to decrease BulletSpeed.
 
 ** How to run: **
-run ./main
+run ./asteroids
 
 ** How to play the game: **
 Hold the right mouse button to move around according to mouse direction
