@@ -9,50 +9,13 @@
 #include "Bullet/Bullet.hpp"
 #include "Asteroid/AsteroidList.hpp"
 #include "Asteroid/Asteroid.hpp"
-
-Bullet bullets[MAX_BULLET_COUNT];
-
-void init_bullets()
-{
-    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
-    {
-        bullets[i].dead = true;
-    }
-}
-
-Bullet *spawn_bullet()
-{
-    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
-    {
-        Bullet *bullet = (bullets + i);
-        if (!bullet->dead)
-        {
-            continue;
-        }
-        bullet->dead = false;
-        return bullet;
-    }
-    return NULL;
-}
-
-void draw_bullets()
-{
-    for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
-    {
-        Bullet *bullet = (bullets + i);
-        if (bullet->dead)
-        {
-            continue;
-        }
-        DrawLineV(bullet->position, Vector2Add(bullet->position, Vector2Scale(bullet->direction, -10)), YELLOW);
-    }
-}
+#include "Bullet/Bullet.hpp"
+#include "Bullet/BulletStack.hpp"
 
 int main(int argc, char **argv)
 {
     // Declare the player in the main game
     Player player;
-    init_bullets();
     int score = 0;
     float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
 
@@ -62,6 +25,14 @@ int main(int argc, char **argv)
     {
         Asteroid asteroid;
         asteroidslist.append(asteroid);
+    }
+
+    // Initialize bullets
+    BulletStack bulletstack;
+    for (int i = 0; i < MAX_BULLET_COUNT; i++)
+    {
+        Bullet bullet;
+        bulletstack.push(bullet);
     }
 
     // Init the window
@@ -83,7 +54,7 @@ int main(int argc, char **argv)
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
-            Bullet *bullet = spawn_bullet();
+            Bullet *bullet = bulletstack.spawn_bullet();
             if (bullet)
             {
                 bullet->position = player.position;
@@ -112,7 +83,7 @@ int main(int argc, char **argv)
         // Bullet update
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {
-            Bullet *bullet = (bullets + i);
+            Bullet *bullet = bulletstack.bullets;
             if (bullet->dead)
                 continue;
 
@@ -185,7 +156,7 @@ int main(int argc, char **argv)
         ClearBackground(BLACK);
         // Drawing out the player, bullets, asteroids
         player.draw_player();
-        draw_bullets();
+        bulletstack.draw_bullets();
         asteroidslist.draw_asteroids();
 
         DrawText(TextFormat("Score: %d", score), 0, 0, 64, RED);
