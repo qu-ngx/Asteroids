@@ -5,7 +5,7 @@ CFLAGS = -I. -Llib
 LIBS = -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo
 MAIN=main.cpp
 
-asteroids:
-	g++ -std=c++11 -g $(MAIN) -o asteroids $(CFLAGS) $(LIBS)
+game:
+	g++ -std=c++11 -g $(MAIN) -o game $(CFLAGS) $(LIBS)
 
 
