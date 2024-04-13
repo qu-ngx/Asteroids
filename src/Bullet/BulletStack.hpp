@@ -61,12 +61,9 @@ public:
             return Bullet(); // This will return a default-constructed card
         }
 
-        // It will shift elements to the left
-        for (int i = topIndex; i < stackSize; i++)
-        {
-            bullets[i] = bullets[i + 1];
-        }
-        stackSize--;
+        Bullet poppedCard = bullets[stackSize - 1]; // Get the top card
+        stackSize--;                                // Update stackSize
+        return poppedCard;
         return *bullets;
     }
 
