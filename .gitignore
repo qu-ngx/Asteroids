@@ -1,5 +1,4 @@
 .DS_Store
 ../.DS_Store
 /.vscode
-src/lib
 src/game.dSYM
