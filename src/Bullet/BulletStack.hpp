@@ -5,10 +5,10 @@
 #include "Bullet.hpp"
 #include "lib/raymath.h"
 #include "lib/raylib.h"
+using namespace std;
 
 #define MAX_BULLET_COUNT 100
 #define BULLET_VELOCITY 20.0
-using namespace std;
 
 class BulletStack
 {
@@ -30,6 +30,7 @@ private:
 
 public:
     Bullet *bullets;
+    int bullet_count = 0;
 
     BulletStack()
     {

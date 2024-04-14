@@ -31,6 +31,7 @@ private:
     }
 
 public:
+    int asteroid_count = 0;
     Asteroid *asteroids;
 
     AsteroidList()
@@ -69,6 +70,12 @@ public:
         size++;
     }
 
+    void asteroid_die(int index)
+    {
+        asteroids[index] = asteroids[asteroid_count - 1];
+        asteroid_count--;
+    }
+
     Rectangle get_asteroid_bounds(Asteroid *asteroid)
     {
         float asteroid_size = ASTEROIDS_SMALL_WH;
@@ -85,16 +92,12 @@ public:
 
     void draw_asteroids()
     {
-        for (size_t i = 0; i < capacity; i++)
+        for (size_t i = 0; i < asteroid_count; i++)
         {
             Asteroid *asteroid = (asteroids + i);
             if (asteroid)
             {
-                if (!asteroid->alive)
-                    continue;
-
                 Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
-
                 DrawRectangleLinesEx(asteroid_rect, 1.0, RED);
             }
         }
@@ -102,20 +105,15 @@ public:
 
     Asteroid *spawn_asteroid(int x, int y, bool is_big)
     {
-        Asteroid *asteroid = NULL;
-        for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
-        {
-            Asteroid *asteroid_ = (asteroids + i);
-            if (asteroid_->alive)
-                continue;
-            asteroid = asteroid_;
-            break;
-        }
+        if (asteroid_count >= MAX_ASTEROIDS_COUNT)
+            return NULL;
+
+        Asteroid *asteroid = (asteroids + asteroid_count);
+        asteroid_count++;
 
         if (asteroid == NULL)
             return NULL;
 
-        asteroid->alive = true;
         asteroid->position.x = x;
         asteroid->position.y = y;
         asteroid->is_big = is_big;

@@ -12,12 +12,10 @@ class Asteroid
 public:
     Vector2 velocity;
     Vector2 position;
-    bool alive;
     bool is_big;
 
     Asteroid()
     {
-        alive = false;
         is_big = false;
         position = Vector2Zero();
         velocity = Vector2Zero();
