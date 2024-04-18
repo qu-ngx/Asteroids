@@ -37,6 +37,23 @@ public:
         Vector2 l = Vector2Add(left, position);
         Vector2 r = Vector2Add(right, position);
 
+        static Vector2 copy_postion[] = {
+            (Vector2){0.0f, 0.0f},
+            (Vector2){-static_cast<float>(GetScreenWidth()), 0.0f},
+            (Vector2){static_cast<float>(GetScreenWidth()), 0.0f},
+            (Vector2){0.0f, -static_cast<float>(GetScreenHeight())},
+            (Vector2){0.0f, static_cast<float>(GetScreenHeight())},
+        };
+
+        for (int i = 0; i < sizeof(copy_postion) / sizeof(copy_postion[0]); i++)
+        {
+            Vector2 relative = copy_postion[i];
+
+            DrawLineV(Vector2Add(t, relative), Vector2Add(l, relative), GREEN);
+            DrawLineV(Vector2Add(t, relative), Vector2Add(r, relative), GREEN);
+            DrawLineV(Vector2Add(l, relative), Vector2Add(r, relative), GREEN);
+        }
+
         DrawLineV(t, l, GREEN);
         DrawLineV(t, r, GREEN);
         DrawLineV(l, r, GREEN);

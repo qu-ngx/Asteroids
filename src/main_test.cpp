@@ -1,7 +1,3 @@
-/*
-    TESTING VERSION FOR NEW FEATURES
-*/
-
 /***********************************
  * CSC 122 Raylib Major Project
  * name: Bekam Guta and Quang Nguyen
@@ -58,7 +54,7 @@ int main(int argc, char **argv)
     }
 
     // Init the window
-    InitWindow(800, 600, "Welcome to DodFight");
+    InitWindow(800, 600, "Welcome to Asteroids");
 
     while (!WindowShouldClose())
     {
@@ -102,6 +98,24 @@ int main(int argc, char **argv)
 
         player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
+        if (player.position.x < -1)
+        {
+            player.position.x += GetScreenWidth();
+        }
+        else if (player.position.x >= GetScreenWidth())
+        {
+            player.position.x -= GetScreenWidth();
+        }
+
+        if (player.position.y < 0)
+        {
+            player.position.y += GetScreenHeight();
+        }
+        else if (player.position.y >= GetScreenHeight())
+        {
+            player.position.y -= GetScreenHeight();
+        }
+
         // Bullet update
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {
@@ -120,18 +134,15 @@ int main(int argc, char **argv)
             if (bullet->dead)
                 continue;
 
-            for (size_t j = 0; j < MAX_ASTEROIDS_COUNT; j++)
+            for (size_t j = 0; j < asteroidslist.asteroid_count; j++)
             {
                 Asteroid *asteroid = (asteroidslist.asteroids + j);
-                if (!asteroid->alive)
-                    continue;
 
                 Rectangle asteroid_rect = asteroidslist.get_asteroid_bounds(asteroid);
                 if (!CheckCollisionPointRec(bullet->position, asteroid_rect))
                     continue;
 
                 bullet->dead = true;
-                asteroid->alive = false;
 
                 score++;
 
@@ -150,17 +161,15 @@ int main(int argc, char **argv)
                         child_asteroid->velocity = velocity;
                     }
                 }
-
+                asteroidslist.asteroid_die(j);
                 break;
             }
         }
 
         // Asteroid update
-        for (size_t i = 0; i < MAX_ASTEROIDS_COUNT; i++)
+        for (size_t i = 0; i < asteroidslist.asteroid_count; i++)
         {
             Asteroid *asteroid = (asteroidslist.asteroids + i);
-            if (!asteroid->alive)
-                continue;
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 

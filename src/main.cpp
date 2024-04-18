@@ -98,6 +98,24 @@ int main(int argc, char **argv)
 
         player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
+        if (player.position.x < 0)
+        {
+            player.position.x += GetScreenWidth();
+        }
+        else if (player.position.x >= GetScreenWidth())
+        {
+            player.position.x -= GetScreenWidth();
+        }
+
+        if (player.position.y < 0)
+        {
+            player.position.y += GetScreenHeight();
+        }
+        else if (player.position.y >= GetScreenHeight())
+        {
+            player.position.y -= GetScreenHeight();
+        }
+
         // Bullet update
         for (size_t i = 0; i < MAX_BULLET_COUNT; i++)
         {

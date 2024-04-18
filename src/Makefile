@@ -4,8 +4,11 @@
 CFLAGS = -I. -Llib
 LIBS = -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo
 MAIN=main.cpp
+TEST=main_test.cpp
 
 game:
 	g++ -std=c++11 -g $(MAIN) -o game $(CFLAGS) $(LIBS)
 
+test:
+	g++ -std=c++11 -g $(TEST) -o test $(CFLAGS) $(LIBS)
 
