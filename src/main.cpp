@@ -1,26 +1,3 @@
-/***********************************
- * CSC 122 Raylib Major Project
- * name: Bekam Guta and Quang Nguyen
- * *********************************/
-
-/***********************************
-** Implemented Data Structures: **
-ArrayList - Asteroids (O(n) * AsteroidsSpeed)
-Stack - Bullet (speed of bullet = O(1) * BulletSpeed)
-- accessing each asteroids object in array (O(n)) is slower so we need to increase the AsteroidSpeed.
-- to access a Bullet in Stack, we have to pop to access later Bullets (O(1)) making the runtime faster, so we need to decrease BulletSpeed.
-
-** How to run: **
-run ./asteroids
-
-** How to play the game: **
-Hold the right mouse button to move around according to mouse direction
-Click left mouse button to shoot the asteroids
-
-Latest game update: https://github.com/qu-ngx/Asteroids
--> Modified non-git version for class submissions.
-**************************************/
-
 #include "lib/raylib.h"
 #include "lib/raymath.h"
 #include "Player/Player.hpp"
@@ -194,7 +171,6 @@ int main(int argc, char **argv)
 
         EndDrawing();
     }
-
     CloseWindow(); // Close window and OpenGL context
 
     return 0;

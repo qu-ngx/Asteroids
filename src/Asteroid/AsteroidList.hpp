@@ -98,7 +98,7 @@ public:
             if (asteroid)
             {
                 Rectangle asteroid_rect = get_asteroid_bounds(asteroid);
-                DrawRectangleLinesEx(asteroid_rect, 1.0, RED);
+                DrawRectangleLinesEx(asteroid_rect, 1.0, GRAY);
             }
         }
     }

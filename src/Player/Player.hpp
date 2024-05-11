@@ -58,6 +58,15 @@ public:
         DrawLineV(t, r, GREEN);
         DrawLineV(l, r, GREEN);
     }
+
+    void reset()
+    {
+        position.x = 400;
+        position.y = 300;
+        rotation = PI / 2.0;
+        acceleration = 100.0;
+        velocity = Vector2Zero();
+    }
 };
 
 #endif

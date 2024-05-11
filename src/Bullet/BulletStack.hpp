@@ -8,7 +8,7 @@
 using namespace std;
 
 #define MAX_BULLET_COUNT 100
-#define BULLET_VELOCITY 20.0
+#define BULLET_VELOCITY 40.0
 
 class BulletStack
 {
@@ -94,7 +94,7 @@ public:
                 if (bullets->dead)
                     continue;
             }
-            DrawLineV(bullet.position, Vector2Add(bullet.position, Vector2Scale(bullet.direction, -10)), YELLOW);
+            DrawLineV(bullet.position, Vector2Add(bullet.position, Vector2Scale(bullet.direction, -10)), WHITE);
             pop();
         }
     }
