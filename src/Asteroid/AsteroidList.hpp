@@ -5,6 +5,7 @@
 #include "lib/raylib.h"
 #include "lib/raymath.h"
 #include "Asteroid.hpp"
+#include <cassert>
 
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
