@@ -140,6 +140,28 @@ public:
             asteroid->velocity = Vector2Scale(random_direction, 100.0f);
         }
     }
+
+    void asteroid_reclaim(int index)
+    {
+        assert(index < asteroid_count && "should only be called on live asteroids");
+        asteroids[index] = asteroids[asteroid_count - 1];
+        asteroid_count--;
+    }
+
+    void destroy_asteroids(int i)
+    {
+        Asteroid *asteroid = (asteroids + i);
+        // Boom animatio (To be added later)
+        asteroid_reclaim(i);
+    }
+
+    void destroy_asteroids()
+    {
+        for (size_t i = 0; i < asteroid_count; i++)
+        {
+            destroy_asteroids(i);
+        }
+    }
 };
 
 #endif

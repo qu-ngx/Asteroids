@@ -143,7 +143,10 @@ bool simulate(Game *game)
         Rectangle asteroid_bounds = game->asteroidslist.get_asteroid_bounds(asteroid);
 
         if (CheckCollisionCircleRec(player->position, 5.0f, asteroid_bounds))
+        {
             gameover = true;
+            game->asteroidslist.destroy_asteroids();
+        }
     }
 
     return gameover;
@@ -192,6 +195,7 @@ int main(int argc, char **argv)
                 game.score = 0;
                 currentScreen = GAMEPLAY;
                 gameOver = false;
+                game.asteroidslist.destroy_asteroids();
                 game.reset();
             }
 
@@ -199,6 +203,7 @@ int main(int argc, char **argv)
             {
                 game.score = 0;
                 currentScreen = TITLE;
+                game.asteroidslist.destroy_asteroids();
                 gameOver = false;
                 game.reset();
             }
@@ -212,7 +217,6 @@ int main(int argc, char **argv)
         {
         case TITLE:
         {
-
             ClearBackground(BLACK);
             transition trans1;
             switch (trans1)
@@ -248,28 +252,29 @@ int main(int argc, char **argv)
         break;
         case ENDING:
         {
+            ClearBackground(BLACK);
             transition trans1;
             switch (trans1)
             {
             case SHOW:
             {
-                ClearBackground(BLACK);
                 DrawText(TextFormat("YOUR HIGH SCORE IS: %d", highScore), 150, 250, 40, GREEN);
-                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, GRAY);
-                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, GRAY);
-                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, GRAY);
-                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, GRAY);
+                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, {229, 228, 226, 100});
+                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, {169, 169, 226, 30});
+                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, {229, 228, 226, 100});
+                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, {229, 228, 226, 100});
+                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, {229, 228, 226, 30});
+                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, {229, 228, 226, 100});
                 trans1 = HIDE;
             }
             break;
             case HIDE:
             {
-                ClearBackground(BLACK);
                 DrawText(TextFormat("YOUR HIGH SCORE IS: %d", highScore), 150, 250, 40, GREEN);
-                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, GRAY);
-                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, GRAY);
-                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, GRAY);
-                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, GRAY);
+                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, {229, 228, 226, 30});
+                DrawText(TextFormat("PRESS H TO COME BACK TO GO BACK TO HOME MENU"), 130, 320, 20, {229, 228, 226, 100});
+                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, {229, 228, 226, 30});
+                DrawText(TextFormat("PRESS SPACE TO REPLAY THE GAME"), 210, 350, 20, {229, 228, 226, 100});
                 trans1 = SHOW;
             }
             break;
