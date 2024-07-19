@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     }
 
     // Init the window
-    InitWindow(800, 600, "Welcome to Asteroids");
+    InitWindow(800, 600, "Asteroids by Quang D. Nguyen");
 
     while (!WindowShouldClose())
     {

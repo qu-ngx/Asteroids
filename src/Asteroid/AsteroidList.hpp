@@ -118,6 +118,8 @@ public:
         asteroid->position.x = x;
         asteroid->position.y = y;
         asteroid->is_big = is_big;
+
+        int sides = GetRandomValue(3, 10);
         return asteroid;
     }
 

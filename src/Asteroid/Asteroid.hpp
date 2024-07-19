@@ -6,6 +6,8 @@
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16
 #define ASTEROID_SPAWN_SEC 0.5f
+#define MAX_ASTEROIDS_VERTS 10
+
 
 class Asteroid
 {
@@ -13,6 +15,7 @@ public:
     Vector2 velocity;
     Vector2 position;
     bool is_big;
+   Vector2 points[MAX_ASTEROIDS_VERTS];
 
     Asteroid()
     {

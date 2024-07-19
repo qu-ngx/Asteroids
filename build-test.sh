@@ -6,13 +6,13 @@ source emsdk_env.sh
 cd ../Asteroids
 cd src
 
-emcc -o ../out/asteroids.html \
+emcc -o ../out/asteroids-test.html \
     main.cpp -Os -Wall /Users/quangnguyen/Downloads/raylib-5.0/src/web/libraylib.a \
     -I. -I /Users/quangnguyen/Downloads/raylib-5.0/src/external \
     -L. -L /Users/quangnguyen/Downloads/raylib-5.0 \
     -s USE_GLFW=3 \
     -s ASYNCIFY \
-    --shell-file ../shell.html \
+    --shell-file ../shell-test.html \
     -s TOTAL_MEMORY=1073741824 \
     -s TOTAL_STACK=1024MB \
     -s INITIAL_MEMORY=2024MB \
@@ -25,4 +25,4 @@ cd ../out
 # BUILD_NAME="$(date -u +"%Y-%m-%d")"
 # zip "${BUILD_NAME}.zip" index.html index.js index.wasm index.data
 
-emrun asteroids.html
+emrun asteroids-test.html
