@@ -1,13 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
-cd ../emsdk
+cd ../emsdk-main
 source emsdk_env.sh
-cd ../Asteroids-deploy
+cd ../Asteroids
 cd src
 
 emcc -o ../out/asteroids.html \
-    main_old.cpp -Os -Wall /Users/quangnguyen/Downloads/raylib-5.0/src/web/libraylib.a \
+    main.cpp -Os -Wall /Users/quangnguyen/Downloads/raylib-5.0/src/web/libraylib.a \
     -I. -I /Users/quangnguyen/Downloads/raylib-5.0/src/external \
     -L. -L /Users/quangnguyen/Downloads/raylib-5.0 \
     -s USE_GLFW=3 \

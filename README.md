@@ -6,7 +6,7 @@ If you have any question, please contact project's owner at quang13012005@gmail.
 
 > Asteroids is a game developed by Quang Nguyen. The game was written in C/C++ as Major Project for my Data Structure Class Spring 2024 and then converted into WebAssembly to deploy on cloud.
 
-> If you are on your desktops or laptops, please feel free to try out my game ^^:
+> If you are on your desktops or laptops, please feel free to try out my game ^^
 > **Try out this game here: [Comming Really Soon]()**
 
 ## Game Features And Inspiration:
