@@ -94,7 +94,7 @@ public:
                 if (bullets->dead)
                     continue;
             }
-            DrawLineV(bullet.position, Vector2Add(bullet.position, Vector2Scale(bullet.direction, -10)), WHITE);
+            DrawLineEx(bullet.position, Vector2Add(bullet.position, Vector2Scale(bullet.direction, -10)), 3.0f, WHITE);
             pop();
         }
     }

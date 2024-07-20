@@ -75,6 +75,7 @@ int main(int argc, char **argv)
 
         player.position = Vector2Add(Vector2Scale(player.velocity, GetFrameTime()), player.position);
 
+        // Wrap player
         if (player.position.x < 0)
         {
             player.position.x += GetScreenWidth();
@@ -115,29 +116,14 @@ int main(int argc, char **argv)
             {
                 Asteroid *asteroid = (asteroidslist.asteroids + j);
 
-                Rectangle asteroid_rect = asteroidslist.get_asteroid_bounds(asteroid);
-                if (!CheckCollisionPointRec(bullet->position, asteroid_rect))
+                bool bullet_in_asteroid = asteroidslist.is_colliding_with_asteroids(bullet->position, asteroid);
+                if (!bullet_in_asteroid)
                     continue;
 
                 bullet->dead = true;
 
                 score++;
 
-                if (asteroid->is_big)
-                {
-                    float velocity_magnitude = Vector2Length(asteroid->velocity);
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Asteroid *child_asteroid = asteroidslist.spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
-                        if (child_asteroid == NULL)
-                            break;
-
-                        Vector2 velocity = {0, -1};
-                        velocity = Vector2Rotate(velocity, (GetRandomValue(0, 100) / 100.0f) * PI * 2.0);
-                        velocity = Vector2Scale(velocity, velocity_magnitude);
-                        child_asteroid->velocity = velocity;
-                    }
-                }
                 asteroidslist.asteroid_die(j);
                 break;
             }
@@ -150,9 +136,9 @@ int main(int argc, char **argv)
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
-            Rectangle asteroid_bounds = asteroidslist.get_asteroid_bounds(asteroid);
+            bool player_hit_asteroid = asteroidslist.is_colliding_with_asteroids(player.position, asteroid);
 
-            if (CheckCollisionCircleRec(player.position, 5.0f, asteroid_bounds))
+            if (player_hit_asteroid)
                 gameover = true;
         }
 

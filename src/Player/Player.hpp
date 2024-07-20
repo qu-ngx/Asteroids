@@ -49,9 +49,9 @@ public:
         {
             Vector2 relative = copy_postion[i];
 
-            DrawLineV(Vector2Add(t, relative), Vector2Add(l, relative), GREEN);
-            DrawLineV(Vector2Add(t, relative), Vector2Add(r, relative), GREEN);
-            DrawLineV(Vector2Add(l, relative), Vector2Add(r, relative), GREEN);
+            DrawLineEx(Vector2Add(t, relative), Vector2Add(l, relative), 3.0f, GREEN);
+            DrawLineEx(Vector2Add(t, relative), Vector2Add(r, relative), 3.0f, GREEN);
+            DrawLineEx(Vector2Add(l, relative), Vector2Add(r, relative), 3.0f, GREEN);
         }
 
         DrawLineV(t, l, GREEN);
