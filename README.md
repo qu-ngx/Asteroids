@@ -25,10 +25,7 @@ If you have any question, please contact project's owner at quang13012005@gmail.
 
 ## Local Installation
 
-**Requirements**:
-
-- Raylib: []()
-- Clang/LLVM: []()
+**Requirements**: Raylib, Clang/LLVM
 
 - Clone project to local machine:
 
