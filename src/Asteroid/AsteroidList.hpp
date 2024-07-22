@@ -11,7 +11,7 @@
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16
-#define ASTEROID_SPAWN_SEC 1.5f
+#define ASTEROID_SPAWN_SEC 0.9f
 #define MAX_ASTEROIDS_VERTS 12
 
 class AsteroidList
@@ -88,10 +88,10 @@ public:
     void draw_asteroids() {
         Vector2 copy_positions[] = {
           (Vector2) { 0.0f, 0.0f },
-          // (Vector2) { - static_cast<float>(GetScreenWidth()), 0.0f },
-          // (Vector2) { static_cast<float>(GetScreenWidth()), 0.0f },
-          // (Vector2) { 0.0f, - static_cast<float>(GetScreenHeight()) },
-          // (Vector2) { 0.0f, static_cast<float>(GetScreenHeight()) },
+          (Vector2) { - static_cast<float>(GetScreenWidth()), 0.0f },
+          (Vector2) { static_cast<float>(GetScreenWidth()), 0.0f },
+          (Vector2) { 0.0f, - static_cast<float>(GetScreenHeight()) },
+          (Vector2) { 0.0f, static_cast<float>(GetScreenHeight()) },
         };
 
         for (size_t i = 0; i < asteroid_count; i++)

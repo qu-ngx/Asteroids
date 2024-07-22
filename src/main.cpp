@@ -135,6 +135,34 @@ int main(int argc, char **argv)
         {
             Asteroid *asteroid = (asteroidslist.asteroids + i);
 
+            for (size_t j = 0; j < asteroidslist.asteroid_count; ++j) {
+              if (j == i) continue;
+
+              Asteroid *other = (asteroid + j);
+
+              Vector2 collision_point;
+              for (int p1 = 0; p1< asteroid->point_count - 1; ++p1) {
+                Vector2 a1 = Vector2Add(asteroid->points[p1], asteroid->position);
+                Vector2 b1 = Vector2Add(asteroid->points[p1 + 1], asteroid->position);
+
+                for (int p2 = 0; p2 < other->point_count - 1; ++p2) {
+                  Vector2 a2 = Vector2Add(other->points[p2], other->position);
+                  Vector2 b2 = Vector2Add(other->points[p2 + 1], other->position);
+                  bool is_colliding = CheckCollisionLines( a1, b1, a2, b2, &collision_point);
+
+                  if (is_colliding) {
+                    Vector2 relative = Vector2Subtract(asteroid->position, collision_point);
+                    relative = Vector2Normalize(relative);
+
+                    float speed = Vector2Length(asteroid->velocity);
+                    asteroid->velocity = Vector2Scale(relative, speed);  
+                    
+                  }
+                }
+              }
+            }
+
+
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
             asteroidslist.wrap_asteroid(asteroid);
