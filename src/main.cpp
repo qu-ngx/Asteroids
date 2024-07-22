@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     Player player;
     int score = 0;
     float asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
-
+    
     // Initialize asteroids
     AsteroidList asteroidslist;
     for (int i = 0; i < MAX_ASTEROIDS_COUNT; i++)
@@ -104,8 +104,8 @@ int main(int argc, char **argv)
             Vector2 velocity = Vector2Scale(bullet->direction, BULLET_VELOCITY);
             bullet->position = Vector2Add(bullet->position, Vector2Scale(velocity, GetFrameTime()));
 
-            if (bullet->position.x < -20 || bullet->position.x > GetScreenWidth() + 20 || bullet->position.y < -20 || bullet->position.y > GetScreenHeight() + 20)
-            {
+            if (bullet->position.x < -20 || bullet->position.x > GetScreenWidth() + 20 ||
+                bullet->position.y < -20 || bullet->position.y > GetScreenHeight() + 20){
                 bullet->dead = true;
             }
 
@@ -123,7 +123,8 @@ int main(int argc, char **argv)
                 bullet->dead = true;
 
                 score++;
-
+                
+                asteroidslist.asteroid_split(asteroid);
                 asteroidslist.asteroid_die(j);
                 break;
             }
@@ -136,6 +137,7 @@ int main(int argc, char **argv)
 
             asteroid->position = Vector2Add(asteroid->position, Vector2Scale(asteroid->velocity, GetFrameTime()));
 
+            asteroidslist.wrap_asteroid(asteroid);
             bool player_hit_asteroid = asteroidslist.is_colliding_with_asteroids(player.position, asteroid);
 
             if (player_hit_asteroid)

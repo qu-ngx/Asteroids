@@ -11,7 +11,7 @@
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16
-#define ASTEROID_SPAWN_SEC 0.5f
+#define ASTEROID_SPAWN_SEC 1.5f
 #define MAX_ASTEROIDS_VERTS 12
 
 class AsteroidList
@@ -79,15 +79,13 @@ public:
         asteroid_count--;
     }
 
-    bool is_colliding_with_asteroids(Vector2 position , Asteroid *asteroid)
-    {
+    bool is_colliding_with_asteroids(Vector2 position , Asteroid *asteroid) {
      Vector2 local_to_asteroid = Vector2Subtract(position, asteroid->position);
      return CheckCollisionPointPoly(local_to_asteroid, asteroid->points, asteroid->point_count);
     }
 
 
-    void draw_asteroids()
-    {
+    void draw_asteroids() {
         Vector2 copy_positions[] = {
           (Vector2) { 0.0f, 0.0f },
           // (Vector2) { - static_cast<float>(GetScreenWidth()), 0.0f },
@@ -99,8 +97,8 @@ public:
         for (size_t i = 0; i < asteroid_count; i++)
         {
             Asteroid *asteroid = (asteroids + i);
-            if (asteroid)
-            {
+            // if (asteroid)
+            // {
                 for (int p = 0; p < asteroid->point_count - 1; ++p) {
                   for (int j = 0; j < sizeof(copy_positions)/sizeof(copy_positions[0]); ++j) {
                     Vector2 p1 = Vector2Add(asteroid->points[p] , asteroid->position);
@@ -108,9 +106,8 @@ public:
                     DrawLineEx(Vector2Add(p1, copy_positions[j]), Vector2Add(p2, copy_positions[j]), 3.0, RED);
                   }
                 }
-            }
+            // }
         }
-
     }
 
     Asteroid *spawn_asteroid(int x, int y, bool is_big)
@@ -127,14 +124,16 @@ public:
         asteroid->position.x = x;
         asteroid->position.y = y;
 
+        asteroid->is_big = is_big;
+
         int sides = GetRandomValue(5, MAX_ASTEROIDS_VERTS - 1);
         asteroid->point_count = sides + 1;
         float r = is_big ? ASTEROIDS_BIG_WH : ASTEROIDS_SMALL_WH;
 
         // Get the angles and the edges of the polygon
         for (int i = 0; i < sides; ++i) {
-          asteroid->points[i].x = r * cosf(2.0f*PI*i/sides) + x;
-          asteroid->points[i].y = r * sin(2.0f*PI*i/sides) + y;
+          asteroid->points[i].x = r * cosf(2.0f*PI*i/sides);
+          asteroid->points[i].y = r * sin(2.0f*PI*i/sides);
 
           asteroid->points[i].x += (GetRandomValue(-100, 100) / 100.0) * 5.0f;
           asteroid->points[i].y += (GetRandomValue(-100, 100) / 100.0) * 5.0f;
@@ -144,6 +143,35 @@ public:
 
         return asteroid;
     }
+
+    void wrap_asteroid(Asteroid *asteroid) {
+      if (asteroid->position.x < 0) {
+        asteroid->position.x += GetScreenWidth();
+      } else if (asteroid->position.x >= GetScreenWidth()){
+        asteroid->position.x -= GetScreenWidth();
+      }
+
+      if (asteroid->position.y < 0) {
+        asteroid->position.y += GetScreenHeight();
+      } else if (asteroid->position.y >= GetScreenHeight()){
+        asteroid->position.y -= GetScreenHeight();
+      }
+    }
+
+    void asteroid_split(Asteroid *asteroid) {
+      if (asteroid->is_big) {
+          float velocity_magnitude = Vector2Length(asteroid->velocity);
+          for (int i = 0; i < 4; i ++) {
+            Asteroid *child_asteroid = spawn_asteroid(asteroid->position.x, asteroid->position.y, false);
+            if (child_asteroid == NULL) break;
+
+            Vector2 velocity = {0, - 1};
+            velocity = Vector2Rotate(velocity, (GetRandomValue(0, 100) / 100.0f) * PI * 2.0);
+            velocity = Vector2Scale(velocity, velocity_magnitude);
+            child_asteroid->velocity = velocity;
+          }
+        }
+      }
 
     void spawnAll()
     {

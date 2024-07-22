@@ -5,7 +5,7 @@
 #define MAX_ASTEROIDS_COUNT 256
 #define ASTEROIDS_BIG_WH 32
 #define ASTEROIDS_SMALL_WH 16
-#define ASTEROID_SPAWN_SEC 0.5f
+#define ASTEROID_SPAWN_SEC 1.5f
 #define MAX_ASTEROIDS_VERTS 12
 
 class Asteroid
@@ -15,6 +15,7 @@ public:
     Vector2 position;
     int point_count;
    Vector2 points[MAX_ASTEROIDS_VERTS];
+   bool is_big;
 
     Asteroid()
     {
