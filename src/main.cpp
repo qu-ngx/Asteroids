@@ -164,7 +164,6 @@ int main(int argc, char **argv)
 {
     // Declare the player in the main game
     Game game;
-
     game.score = 0;
 
     // Init the window
