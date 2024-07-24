@@ -20,7 +20,7 @@ If you are on your desktops or laptops, please feel free to try out my game ^^
 
 - **SHOOT THE ASTEROIDS:** Click your left-clicks to fire.
 
-- **ASTEROIDS DOPPLEGANGER** The asteroids will split on your way to eascape. Destroy them all!
+- **ASTEROIDS DOPPLEGANGER:** The asteroids will split on your way to eascape. Destroy them all!
 
 - **PAUSE THE GAME:** Click P to PAUSE the game.
 
