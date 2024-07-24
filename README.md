@@ -12,7 +12,7 @@ If you have any question, please contact project's owner at quang13012005@gmail.
 
 If you are on your desktops or laptops, please feel free to try out my game ^^
 
-- **Try out this game here: [Comming Really Soon]()**
+- **Try out this game here: [bit.ly/asteroids-qungx](bit.ly/asteroids-qungx)**
 
 ## HOW TO PLAY
 
