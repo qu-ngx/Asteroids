@@ -180,6 +180,12 @@ int main(int argc, char **argv)
             paused = !paused;
         }
 
+        if (gameover && IsKeyPressed(KEY_R))
+        {
+          gameover = false;
+          game.reset();
+        }
+
         if (!paused)
         {
             bool gameover = simulate(&game);
@@ -191,30 +197,37 @@ int main(int argc, char **argv)
 
         BeginDrawing();
 
-        ClearBackground(BLACK);
+        ClearBackground(Color{0, 34, 68, 100});
         // Drawing out the player, bullets, asteroids
         if (!gameover) {
           game.player.draw_player();
+          DrawText(TextFormat("Score: %d", game.score), 0, 0, 64, BLUE);
         }
 
         game.bulletstack.draw_bullets();
         game.asteroidslist.draw_asteroids();
 
-        DrawText(TextFormat("Score: %d", game.score), 0, 0, 64, RED);
 
         if (paused)
         {
             int text_size = 64;
             int text_width = MeasureText("Paused", text_size);
-            DrawText("Paused", GetScreenWidth() / 2 - text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size, RED);
+            DrawText("Paused", GetScreenWidth() / 2 - text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size, Color{0, 234, 255, 100});
         }
 
         if (gameover)
         {
-            int text_size = 64;
+            int text_size = 30;
             const char* gameover_text = "GAME OVER (PRESS R TO RESTART)"; 
-            int text_width = MeasureText(gameover_text, text_size);
-            DrawText(gameover_text, GetScreenWidth() / 2 - text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size, RED);
+            int gameover_text_width = MeasureText(gameover_text, text_size);
+            const char* score_text = TextFormat("YOUR SCORE IS %d", game.score); 
+            int score_text_width = MeasureText(score_text, text_size);
+            int text_size_q = 20;
+            const char* quang_text = "THANK YOU FOR PLAYING MY GAME - QUANG NGUYEN (QU-NGX)";
+            int quang_text_width = MeasureText(quang_text, text_size_q);
+            DrawText(gameover_text, GetScreenWidth() / 2 - gameover_text_width / 2.0, (GetScreenHeight() / 2 - text_size / 2.0) - 50, text_size , RED);
+            DrawText(score_text, GetScreenWidth() / 2 - score_text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size , BLUE);
+            DrawText(quang_text, GetScreenWidth() / 2 - quang_text_width / 2.0, (GetScreenHeight() / 2 - text_size_q / 2.0) + 50, text_size_q , Color{0, 234, 255, 100});
         }
         EndDrawing();
     }

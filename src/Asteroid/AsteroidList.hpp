@@ -103,7 +103,7 @@ public:
                   for (int j = 0; j < sizeof(copy_positions)/sizeof(copy_positions[0]); ++j) {
                     Vector2 p1 = Vector2Add(asteroid->points[p] , asteroid->position);
                     Vector2 p2 = Vector2Add(asteroid->points[p + 1], asteroid->position);
-                    DrawLineEx(Vector2Add(p1, copy_positions[j]), Vector2Add(p2, copy_positions[j]), 3.0, RED);
+                    DrawLineEx(Vector2Add(p1, copy_positions[j]), Vector2Add(p2, copy_positions[j]), 3.0, Color{175, 219, 245, 100});
                   }
                 }
             // }

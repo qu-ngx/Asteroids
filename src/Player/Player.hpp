@@ -49,14 +49,14 @@ public:
         {
             Vector2 relative = copy_postion[i];
 
-            DrawLineEx(Vector2Add(t, relative), Vector2Add(l, relative), 3.0f, GREEN);
-            DrawLineEx(Vector2Add(t, relative), Vector2Add(r, relative), 3.0f, GREEN);
-            DrawLineEx(Vector2Add(l, relative), Vector2Add(r, relative), 3.0f, GREEN);
+            DrawLineEx(Vector2Add(t, relative), Vector2Add(l, relative), 3.0f, BLUE);
+            DrawLineEx(Vector2Add(t, relative), Vector2Add(r, relative), 3.0f, BLUE);
+            DrawLineEx(Vector2Add(l, relative), Vector2Add(r, relative), 3.0f, BLUE);
         }
 
-        DrawLineV(t, l, GREEN);
-        DrawLineV(t, r, GREEN);
-        DrawLineV(l, r, GREEN);
+        DrawLineV(t, l, BLUE);
+        DrawLineV(t, r, BLUE);
+        DrawLineV(l, r, BLUE);
     }
 
     void reset()
