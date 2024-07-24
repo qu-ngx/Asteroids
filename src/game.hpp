@@ -11,7 +11,7 @@ class Game
 {
 public:
     Player player;
-    int score = 0;
+    int score;
     float asteroid_spawn_sec;
     BulletStack bulletstack;
     AsteroidList asteroidslist;
@@ -39,11 +39,14 @@ public:
         score = 0;
 
         // reinit players, asteroids,
-        player.position.x = 400;
-        player.position.y = 300;
+        player.position.x = GetScreenWidth() / 2;
+        player.position.y = GetScreenHeight() / 2;
         player.rotation = PI / 2.0;
 
         player.acceleration = 100.0;
         player.velocity = Vector2Zero();
+
+        asteroidslist.destroy_asteroids();
+        asteroid_spawn_sec = ASTEROID_SPAWN_SEC;
     }
 };

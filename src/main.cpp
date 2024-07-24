@@ -16,7 +16,6 @@ bool simulate(Game *game)
     Vector2 mouse_position = GetMousePosition();
     Vector2 to_cursor = Vector2Subtract(mouse_position, player->position);
     Vector2 player_dir = Vector2Normalize(to_cursor);
-    bool spawned = false;
 
     if (!gameover) {
       if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
@@ -217,16 +216,17 @@ int main(int argc, char **argv)
 
         if (gameover)
         {
-            int text_size = 30;
+            int gameover_text_size = 35;
+            int score_text_size = 50;
             const char* gameover_text = "GAME OVER (PRESS R TO RESTART)"; 
-            int gameover_text_width = MeasureText(gameover_text, text_size);
+            int gameover_text_width = MeasureText(gameover_text, gameover_text_size);
             const char* score_text = TextFormat("YOUR SCORE IS %d", game.score); 
-            int score_text_width = MeasureText(score_text, text_size);
+            int score_text_width = MeasureText(score_text, score_text_size);
             int text_size_q = 20;
             const char* quang_text = "THANK YOU FOR PLAYING MY GAME - QUANG NGUYEN (QU-NGX)";
             int quang_text_width = MeasureText(quang_text, text_size_q);
-            DrawText(gameover_text, GetScreenWidth() / 2 - gameover_text_width / 2.0, (GetScreenHeight() / 2 - text_size / 2.0) - 50, text_size , RED);
-            DrawText(score_text, GetScreenWidth() / 2 - score_text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size , BLUE);
+            DrawText(gameover_text, GetScreenWidth() / 2 - gameover_text_width / 2.0, (GetScreenHeight() / 2 - gameover_text_size / 2.0) - 50, gameover_text_size , RED);
+            DrawText(score_text, GetScreenWidth() / 2 - score_text_width / 2.0, GetScreenHeight() / 2 - score_text_size / 2.0, score_text_size , BLUE);
             DrawText(quang_text, GetScreenWidth() / 2 - quang_text_width / 2.0, (GetScreenHeight() / 2 - text_size_q / 2.0) + 50, text_size_q , Color{0, 234, 255, 100});
         }
         EndDrawing();
