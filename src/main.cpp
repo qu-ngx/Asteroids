@@ -8,36 +8,38 @@
 #include "Bullet/BulletStack.hpp"
 #include "game.hpp"
 
+bool gameover = false;
+
 bool simulate(Game *game)
 {
     Player *player = &game->player;
     Vector2 mouse_position = GetMousePosition();
     Vector2 to_cursor = Vector2Subtract(mouse_position, player->position);
     Vector2 player_dir = Vector2Normalize(to_cursor);
-    bool gameover = false;
     bool spawned = false;
 
-    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-    {
-        // TODO: make sure to cursor is not zero vector
-        float a = player->acceleration * GetFrameTime();
-        player->velocity = Vector2Add(Vector2Scale(player_dir, a), player->velocity);
-    }
+    if (!gameover) {
+      if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+      {
+          // TODO: make sure to cursor is not zero vector
+          float a = player->acceleration * GetFrameTime();
+          player->velocity = Vector2Add(Vector2Scale(player_dir, a), player->velocity);
+      }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    {
-        Bullet *bullet = game->bulletstack.spawn_bullet();
-        if (bullet)
-        {
-            bullet->position = player->position;
-            bullet->direction = player_dir;
-        }
+      if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+      {
+          Bullet *bullet = game->bulletstack.spawn_bullet();
+          if (bullet)
+          {
+              bullet->position = player->position;
+              bullet->direction = player_dir;
+          }
+      }
     }
-
+      
     game->asteroid_spawn_sec -= GetFrameTime();
-    if (!spawned && game->asteroid_spawn_sec < 0)
+    if (!gameover && game->asteroid_spawn_sec < 0)
     {
-        spawned = true;
         game->asteroid_spawn_sec = ASTEROID_SPAWN_SEC + game->asteroid_spawn_sec;
         game->asteroidslist.spawnAll();
     }
@@ -173,7 +175,7 @@ int main(int argc, char **argv)
 
     while (!WindowShouldClose())
     {
-        if (IsKeyPressed(KEY_P))
+        if (IsKeyPressed(KEY_P) && !gameover)
         {
             paused = !paused;
         }
@@ -183,7 +185,7 @@ int main(int argc, char **argv)
             bool gameover = simulate(&game);
             if (gameover)
             {
-                break;
+               game.asteroidslist.destroy_asteroids(); 
             }
         }
 
@@ -191,7 +193,10 @@ int main(int argc, char **argv)
 
         ClearBackground(BLACK);
         // Drawing out the player, bullets, asteroids
-        game.player.draw_player();
+        if (!gameover) {
+          game.player.draw_player();
+        }
+
         game.bulletstack.draw_bullets();
         game.asteroidslist.draw_asteroids();
 
@@ -204,9 +209,15 @@ int main(int argc, char **argv)
             DrawText("Paused", GetScreenWidth() / 2 - text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size, RED);
         }
 
+        if (gameover)
+        {
+            int text_size = 64;
+            const char* gameover_text = "GAME OVER (PRESS R TO RESTART)"; 
+            int text_width = MeasureText(gameover_text, text_size);
+            DrawText(gameover_text, GetScreenWidth() / 2 - text_width / 2.0, GetScreenHeight() / 2 - text_size / 2.0, text_size, RED);
+        }
         EndDrawing();
     }
-    CloseWindow(); // Close window and OpenGL context
 
     return 0;
 }
