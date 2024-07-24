@@ -6,7 +6,7 @@ source emsdk_env.sh
 cd ../Asteroids
 cd src
 
-emcc -o ../out/asteroids-release.html \
+emcc -o ../out/index.html \
     main.cpp -Os -Wall /Users/quangnguyen/Downloads/raylib-5.0/src/web/libraylib.a \
     -I. -I /Users/quangnguyen/Downloads/raylib-5.0/src/external \
     -L. -L /Users/quangnguyen/Downloads/raylib-5.0 \
@@ -25,4 +25,4 @@ cd ../out
 # BUILD_NAME="$(date -u +"%Y-%m-%d")"
 # zip "${BUILD_NAME}.zip" index.html index.js index.wasm index.data
 
-emrun asteroids-release.html
+emrun index.html
