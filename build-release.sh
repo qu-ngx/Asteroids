@@ -1,15 +1,14 @@
 #!/bin/bash
 set -euo pipefail
 
-cd ../emsdk-main
+cd raylib-5.0/src/emsdk/
 source emsdk_env.sh
-cd ../Asteroids
-cd src
+cd ../../../src
 
 emcc -o ../out/index.html \
-    main.cpp -Os -Wall /Users/quangnguyen/Downloads/raylib-5.0/src/web/libraylib.a \
-    -I. -I /Users/quangnguyen/Downloads/raylib-5.0/src/external \
-    -L. -L /Users/quangnguyen/Downloads/raylib-5.0 \
+    main.cpp -Os -Wall ../raylib-5.0/src/web/libraylib.a \
+    -I. -I ../raylib-5.0/src/external \
+    -L. -L ../raylib-5.0 \
     -s USE_GLFW=3 \
     -s ASYNCIFY \
     --shell-file ../shell-release.html \
