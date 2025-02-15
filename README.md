@@ -14,14 +14,22 @@ If you are on your desktops or laptops, please feel free to try out my game ^^
 
 - **Try out this game here: [Qu-Ngx's Asteroids Game](https://bit.ly/asteroids-qungx)**
 
-## HOW TO PLAY
+## Implementations:
+- This game was inspired by how the normal ways objects are managed in OOP manners
+- Stack was made to store all the Bullet objects in the game, attaining the simplicity and fast retrival of O(1) when popping / using a bullet
+- Array was made to store all the Asteroids objects, which keeps it maintainable for unchanged sized and fixed attributes. Memory usage: O(N)
+- Vectors and Geometry were also utilized in the game to detect collisions, bullet contact and ship navigation. 
 
-- **NAVIGATE THE SHIP:** Please hold your left/right clicks to navigate the ship.
 
-- **SHOOT THE ASTEROIDS:** Click your left-clicks to fire.
+## How To Play?
 
-- **ASTEROIDS DOPPLEGANGER:** The asteroids will split on your way to eascape. Destroy them all!
+- **Ship Navigation:** Hold your left/right mouse clicks to navigate the ship. Release to float the ship
 
-- **PAUSE THE GAME:** Click P to PAUSE the game.
+- **Shooting:** Left click spam to fire bullets.
 
-- **RESTART THE GAME:** Happened to die? Click R to RESTART
+# Gameplay
+- **Asteroids Doppleganger:** Beware that all asteroids will split into small fragments in 4 directions
+
+- **Pause the game:** Click P to PAUSE the game.
+
+- **Brought down by Asteroids rain?:** Happened to die? Click R to RESTART
